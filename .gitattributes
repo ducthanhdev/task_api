@@ -1,0 +1,20 @@
+# Set default behavior to LF line endings
+* text=auto eol=lf
+
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+
+
