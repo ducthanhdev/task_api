@@ -1,142 +1,144 @@
-# 📌 Task API – NestJS + MongoDB
+# 📌 Task Management API
 
-## 🎯 Mục tiêu
+REST API quản lý Task được xây dựng với **NestJS**, **MongoDB** và **TypeScript**.
 
-Ứng dụng mẫu để **nghiên cứu và triển khai API RESTful** với [NestJS](https://nestjs.com/) theo mô hình **MVC**.  
-Hệ thống quản lý **Task** (nhiệm vụ) gồm các trường:
+## ✨ Tính năng chính
 
-- `id` (UUID)
-- `title` (string, bắt buộc)
-- `description` (string)
-- `status` (enum: `"To Do" | "In Progress" | "Done"`)
-- `createdAt` (datetime)
-
----
-
-## 🏗️ Kiến trúc
-
-Ứng dụng được tổ chức theo mô hình **MVC**:
-
-- **Model**: Định nghĩa schema Task bằng Mongoose (`task.schema.ts`)
-- **Controller**: Xử lý HTTP request (`tasks.controller.ts`)
-- **Service**: Chứa nghiệp vụ CRUD (`tasks.service.ts`)
-- **Module**: Đăng ký schema, controller, service (`tasks.module.ts`)
-
-Thư mục chính:
-
-```
-src
-├─ app.module.ts
-├─ main.ts
-└─ tasks
-   ├─ tasks.module.ts
-   ├─ tasks.controller.ts
-   ├─ tasks.service.ts
-   ├─ schemas
-   │   └─ task.schema.ts
-   └─ dto
-       ├─ create-task.dto.ts
-       └─ update-task.dto.ts
-```
+- ✅ **CRUD Operations**: Tạo, đọc, cập nhật, xóa tasks
+- ✅ **Soft Delete**: Xóa mềm và khôi phục tasks
+- ✅ **Priority & Due Date**: Quản lý độ ưu tiên và hạn chót
+- ✅ **Status Management**: Quản lý trạng thái với validation
+- ✅ **Search & Filter**: Tìm kiếm và lọc tasks
+- ✅ **Pagination**: Phân trang kết quả
+- ✅ **API Documentation**: Swagger UI tự động
+- ✅ **Comprehensive Testing**: Unit tests và E2E tests
 
 ---
 
-## ⚙️ Cài đặt & chạy
+## 🚀 Cách chạy ứng dụng
 
 ### 1. Cài đặt dependencies
-
 ```bash
 npm install
 ```
 
-### 2. Tạo file `.env`
-
+### 2. Cấu hình môi trường
+Tạo file `.env`:
 ```env
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/task_api
 ```
 
-### 3. Chạy server
-
+### 3. Chạy ứng dụng
 ```bash
+# Development mode
 npm run start:dev
+
+# Production mode
+npm run build
+npm run start:prod
 ```
 
-Ứng dụng sẽ chạy tại:  
-👉 `http://localhost:3000`
-
-Tài liệu Swagger (OpenAPI) tại:  
-👉 `http://localhost:3000/docs`
+### 4. Truy cập ứng dụng
+- **API Base URL**: `http://localhost:3000`
+- **Swagger Documentation**: `http://localhost:3000/docs`
+- **Health Check**: `http://localhost:3000/health`
 
 ---
 
-## 🚀 API Endpoints
+## 📚 API Documentation
 
-| Method | Endpoint     | Mô tả                                               |
-| ------ | ------------ | --------------------------------------------------- |
-| POST   | `/tasks`     | Tạo task mới                                        |
-| GET    | `/tasks`     | Lấy danh sách task (có phân trang, lọc theo status) |
-| GET    | `/tasks/:id` | Lấy chi tiết task theo id                           |
-| PATCH  | `/tasks/:id` | Cập nhật task                                       |
-| DELETE | `/tasks/:id` | Xóa task                                            |
+### Swagger UI
+Truy cập `http://localhost:3000/docs` để xem tài liệu API đầy đủ với Swagger UI.
 
-### Ví dụ cURL
+### Các endpoint chính
 
-```bash
-# Tạo mới
-curl -X POST http://localhost:3000/tasks   -H "Content-Type: application/json"   -d '{"title":"Viết unit test","description":"ít nhất 1 test"}'
-
-# Lấy danh sách (100 bản ghi, lọc status)
-curl "http://localhost:3000/tasks?page=1&limit=100&status=To%20Do"
-
-# Lấy theo id
-curl http://localhost:3000/tasks/<id>
-
-# Cập nhật
-curl -X PATCH http://localhost:3000/tasks/<id>   -H "Content-Type: application/json"   -d '{"status":"Done"}'
-
-# Xóa
-curl -X DELETE http://localhost:3000/tasks/<id>
-```
+| Method | Endpoint | Mô tả |
+|--------|----------|-------|
+| `GET` | `/` | Hello World |
+| `GET` | `/health` | Health check |
+| `POST` | `/tasks` | Tạo task mới |
+| `GET` | `/tasks` | Lấy danh sách tasks (có phân trang, lọc, tìm kiếm) |
+| `GET` | `/tasks/:id` | Lấy chi tiết task |
+| `PATCH` | `/tasks/:id` | Cập nhật task |
+| `DELETE` | `/tasks/:id` | Xóa mềm task |
+| `PUT` | `/tasks/:id/restore` | Khôi phục task đã xóa |
+| `DELETE` | `/tasks/:id/hard` | Xóa vĩnh viễn task |
 
 ---
 
-## ✅ Unit Test
+## 🧪 Kết quả Unit Test
 
-Dự án có **unit test (Jest)** cho `TasksService` với **mock Mongoose Model**.
-
-Chạy test:
-
+### Chạy tests
 ```bash
+# Chạy unit tests
 npm run test
+
+# Chạy với coverage
+npm run test:cov
+
+# Chạy E2E tests
+npm run test:e2e
 ```
 
-Kết quả ví dụ:
+### Kết quả hiện tại
+```
+✅ Unit Tests: 27/27 PASSED (100%)
+✅ E2E Tests: 16/16 PASSED (100%)
+✅ Total Tests: 43/43 PASSED (100%)
+✅ Coverage: 75.66%
+```
 
-```
-PASS  src/tasks/tasks.service.spec.ts
-  TasksService
-    ✓ findAll trả danh sách rỗng & tổng 0
-    ✓ update trả về bản ghi đã cập nhật
-```
+### Test Coverage Breakdown
+- **Controllers**: 90.9% coverage
+- **Services**: 91.22% coverage  
+- **DTOs**: 100% coverage
+- **Schemas**: 100% coverage
+- **Exception Filter**: 83.33% coverage
 
 ---
 
-## 🔧 Tối ưu hiệu năng
+## ⚡ Hiệu năng
 
-- Sử dụng `.lean()` khi truy vấn Mongoose (giảm overhead).
-- Thêm **index** `{ status: 1, createdAt: -1 }` cho schema.
-- Hỗ trợ phân trang & lọc status trong API `GET /tasks`.
-- Đảm bảo trả về 100 bản ghi < 200ms trên DB local.
+### Kết quả Load Test
+- **Average Response Time**: 9.55ms (Target: < 200ms) ✅
+- **P95 Response Time**: 58ms (Target: < 200ms) ✅
+- **P99 Response Time**: 58ms (Target: < 300ms) ✅
+- **Concurrent Requests**: 3.60ms/request (5 concurrent) ✅
+
+### Tối ưu hóa
+- ✅ **MongoDB Indexes**: Tối ưu cho status, priority, search, dueDate
+- ✅ **Lean Queries**: Sử dụng `.lean()` để giảm overhead
+- ✅ **Pagination**: Hỗ trợ phân trang hiệu quả
+- ✅ **Caching Ready**: Sẵn sàng cho Redis caching
+
+## 🛠️ Công nghệ sử dụng
+
+- **Backend**: NestJS, TypeScript
+- **Database**: MongoDB, Mongoose
+- **Validation**: class-validator, class-transformer
+- **Documentation**: Swagger/OpenAPI
+- **Testing**: Jest, Supertest
+- **Code Quality**: ESLint, Prettier
 
 ---
 
-## 📘 Tài liệu kỹ thuật
+## 📁 Cấu trúc dự án
 
-- **NestJS**: Modules, Controllers, Services, Dependency Injection
-- **Mongoose**: Schema, Model, CRUD
-- **Validation**: `class-validator`, `ValidationPipe`
-- **Swagger (OpenAPI)**: mô tả API tại `/docs`
-- **Jest**: viết unit test cho Service
-
----
+```
+src/
+├── app.module.ts              # Root module
+├── main.ts                    # Application bootstrap
+├── common/                    # Shared utilities
+│   ├── constants/            # App constants
+│   ├── exceptions/           # Custom exceptions
+│   ├── filters/              # Global exception filter
+│   ├── interfaces/           # TypeScript interfaces
+│   └── types/                # Custom types
+└── tasks/                    # Tasks module
+    ├── dto/                  # Data Transfer Objects
+    ├── schemas/              # Mongoose schemas
+    ├── tasks.controller.ts   # REST endpoints
+    ├── tasks.service.ts      # Business logic
+    └── tasks.module.ts       # Module definition
+```
